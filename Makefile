@@ -10,7 +10,7 @@ VPATH = src
 # Directories variables
 BINDIR := bin
 BUILDDIR := build
-INCLUDEDIR :=include
+INCLUDEDIR := include
 LIBDIR := lib
 SRCDIR := src
 
@@ -21,19 +21,23 @@ SRCEXT := cpp
 .PHONY: clean, run
 
 # flags
-CPPFlLAGS := -std=c++11 -L$(LIBDIR) -I$(INCLUDEDIR)
+CCFlLAGS := -std=c++11  -I$(INCLUDEDIR)
+LFLAGS := -L$(LIBDIR)
+
+# Libs
+LIBS:= -lsfml-system -lsfml-graphics -lsfml-window -lsfml-audio
 
 SOURCES := $(shell find $(SRCDIR) -type f -name	*.$(SRCEXT) -printf "%f\n")
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 
 $(BINDIR): $(BUILDDIR)/$(OBJECTS)
 	@echo "Linking..."
-	$(CC) $^ -o $(BINDIR)/$(PROGRAM)
+	$(CC) $^ -o $(BINDIR)/$(PROGRAM) $(LFLAGS) $(LIBS)
 
 $(BUILDDIR)/%.o: %.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)
 	@mkdir -p $(BINDIR)
-	$(CC) $(CPPFlLAGS) -c -o $@ $<
+	$(CC) $(CCFlLAGS) -c -o $@ $<
 
 clean:
 	@echo "Cleaning the project..."
